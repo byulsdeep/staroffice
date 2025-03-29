@@ -73,6 +73,7 @@ function insertImageToEditor(imageUrl) {
         image.src = imageUrl
         image.onload = () => {
             const img = document.createElement('img')
+            img.style.maxWidth = '100%'
             img.src = imageUrl
             editor.appendChild(img)
         }

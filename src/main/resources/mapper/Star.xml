@@ -1,0 +1,1224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tps.web.mapper.xml.StarMapper">
+	<update id="updateEmployeePhoto" parameterType="com.tps.web.staroffice.entity.EmployeeEntity">
+		update employee set employeePhoto = #{employeePhoto}
+		where employeeId = #{employeeId}
+	</update>
+	<select id="getNewestDocumentsFromAllDepartmentsLimit5" resultType="com.tps.web.staroffice.dto.DocumentDto">
+		select
+			documentDepartmentCode,
+		    departmentName,
+			documentNumber,
+			documentTitle
+		from
+			document
+			join department
+				on
+						documentDepartmentCode = departmentCode
+		where
+			documentDeleted = 0
+		order by
+			documentCreated desc, documentNumber desc
+		limit 5
+	</select>
+	<select id="getNewestSavedDocumentsFromAllDepartmentsLimit5" parameterType="com.tps.web.staroffice.dto.DocumentDto" resultType="com.tps.web.staroffice.dto.DocumentDto">
+		select
+			documentDepartmentCode,
+		    departmentName,
+			documentNumber,
+			documentTitle
+		from
+			document
+			join department
+				on
+						documentDepartmentCode = departmentCode
+			join savedDocument
+				on
+						documentDepartmentCode = savedDocumentDepartmentCode
+					and
+		           		documentNumber = savedDocumentNumber
+		where
+			documentDeleted = 0
+		    and
+		    savedDocumentEmployeeId = #{savedDocumentEmployeeId}
+		order by
+			documentNumber desc, documentCreated desc
+		limit 5
+	</select>
+	<select id="getNotificationsLimit5" parameterType="string" resultType="com.tps.web.staroffice.dto.NotificationDto">
+		select
+			notificationSender,
+		    notificationReceiver,
+		    employeeLastname,
+		    employeeFirstname,
+		    gradeName,
+		    departmentName,
+		    notificationCreated,
+		    notificationNotificationTypeCode,
+		    notificationTypeName,
+		    notificationDocumentDepartmentCode,
+		    notificationDocumentNumber
+		from
+			notification
+		    join
+		    notificationType on notificationNotificationTypeCode = notificationTypeCode
+		    join
+		    employee on notificationSender = employeeId
+		    join
+		    department on employeeDepartmentCode = departmentCode
+		    join
+		    grade on employeeGradeCode = gradeCode
+		where
+			notificationReceiver = #{employeeId}
+		order by
+			notificationCreated desc
+		limit 5
+	</select>
+
+	<delete id="deleteNotificationByType" parameterType="com.tps.web.staroffice.entity.NotificationEntity">
+		delete from notification
+		where
+			notificationSender = #{notificationSender}
+		    and
+		    notificationReceiver = #{notificationReceiver}
+		    and
+		    notificationNotificationTypeCode = #{notificationNotificationTypeCode}
+	</delete>
+	<delete id="deleteNotification" parameterType="com.tps.web.staroffice.entity.NotificationEntity">
+		delete from notification
+		where
+			notificationSender = #{notificationSender}
+		    and
+		    notificationReceiver = #{notificationReceiver}
+		    and
+		    notificationCreated = #{notificationCreated}
+	</delete>
+	<select id="getNotifications" parameterType="string" resultType="com.tps.web.staroffice.dto.NotificationDto">
+		select
+			notificationSender,
+		    notificationReceiver,
+		    employeeLastname,
+		    employeeFirstname,
+		    employeePhoto,
+		    gradeName,
+		    departmentName,
+		    notificationCreated,
+		    notificationNotificationTypeCode,
+		    notificationTypeName,
+		    notificationDocumentDepartmentCode,
+		    notificationDocumentNumber
+		from
+			notification
+		    join
+		    notificationType on notificationNotificationTypeCode = notificationTypeCode
+		    join
+		    employee on notificationSender = employeeId
+		    join
+		    department on employeeDepartmentCode = departmentCode
+		    join
+		    grade on employeeGradeCode = gradeCode
+		where
+			notificationReceiver = #{employeeId}
+		order by
+			notificationCreated desc
+	</select>
+	<insert id="insertNotification" parameterType="com.tps.web.staroffice.entity.NotificationEntity">
+		insert into notification values (
+			#{notificationSender},
+			#{notificationReceiver},
+			now(),
+			#{notificationNotificationTypeCode},
+			#{notificationDocumentDepartmentCode},
+			#{notificationDocumentNumber}
+		)
+	</insert>
+	<select id="getMessageNotificationExists" parameterType="com.tps.web.staroffice.entity.NotificationEntity" resultType="boolean">
+		select
+			count(*)
+		from
+			notification
+		where
+				notificationSender = #{notificationSender}
+			and
+				notificationReceiver = #{notificationReceiver}
+			and
+				notificationNotificationTypeCode = 2
+	</select>
+	<select id="getNotificationReceivers" parameterType="com.tps.web.staroffice.entity.NotificationEntity" resultType="string">
+		select
+			employeeId
+		from
+			employee
+		where
+			employeeDepartmentCode = #{notificationDocumentDepartmentCode}
+		    and
+		    employeeId != #{notificationSender}
+	</select>
+	<insert id="insertMessage" parameterType="com.tps.web.staroffice.entity.MessageEntity">
+		insert into message
+		values(#{messageSender}, #{messageReceiver}, now(), #{messageBody}, 0)
+	</insert>
+	<update id="updateMessageRead" parameterType="com.tps.web.staroffice.entity.MessageEntity">
+		update message set
+			messageRead = true
+		where
+			messageSender = #{messageSender}
+		    and
+		    messageReceiver = #{messageReceiver}
+	</update>
+	<select id="getAllMessages" parameterType="com.tps.web.staroffice.entity.MessageEntity" resultType="com.tps.web.staroffice.entity.MessageEntity">
+		select * from
+			message
+		where
+			(messageSender = #{messageReceiver}
+			and
+		    messageReceiver = #{messageSender})
+			or
+			(messageSender = #{messageSender}
+			and
+		    messageReceiver = #{messageReceiver})
+		order by messageSent asc
+	</select>
+	<select id="getMySelfAsPartnerInfo" parameterType="string" resultType="com.tps.web.staroffice.dto.PartnerDto">
+		select
+			employeeId as partnerId,
+			employeeLastName as partnerLastname,
+			employeeFirstname as partnerFirstname,
+			employeePhoto as partnerPhoto,
+			messageSent as lastMessageSent,
+			messageBody as lastMessageBody,
+			messageRead as lastMessageRead
+		from
+				message
+			join
+				employee
+					on
+							messageSender = employeeId
+						and
+							messageReceiver = employeeId
+		where
+			employeeId = #{employeeId}
+		order by messageSent desc limit 1
+	</select>
+	<select id="getPartnerInfo" parameterType="com.tps.web.staroffice.entity.MessageEntity" resultType="com.tps.web.staroffice.dto.PartnerDto">
+		select
+			employeeId as partnerId,
+			employeeLastName as partnerLastname,
+			employeeFirstname as partnerFirstname,
+			employeePhoto as partnerPhoto,
+			messageSent as lastMessageSent,
+			messageBody as lastMessageBody,
+			messageRead as lastMessageRead
+		from message join employee on (messageSender = employeeId or messageReceiver = employeeId)
+		where
+			(messageSender = #{messageReceiver} or messageReceiver = #{messageReceiver})
+			and
+			(messageSender = #{messageSender} or messageReceiver = #{messageSender})
+			and
+			employeeId != #{messageReceiver}
+		order by messageSent desc
+		limit 1
+	</select>
+	<select id="getAllPartnersInfo" parameterType="string" resultMap="partnersMap">
+			(select * from
+				(select
+					#{employeeId} as myId,
+					employeeId as partnerId,
+			        employeeLastName as partnerLastname,
+			        employeeFirstname as partnerFirstname,
+			        employeePhoto as partnerPhoto,
+			        messageSent as lastMessageSent,
+					messageBody as lastMessageBody,
+			        messageRead as lastMessageRead
+				from message join employee on (messageSender = employeeId or messageReceiver = employeeId)
+				where
+					(messageSender = #{employeeId} or messageReceiver = #{employeeId})
+					and
+					employeeId != #{employeeId}
+				order by messageSent desc) s
+			group by partnerId)
+		union
+			(select
+				employeeId as myId,
+				employeeId as partnerId,
+				employeeLastName as partnerLastname,
+				employeeFirstname as partnerFirstname,
+				employeePhoto as partnerPhoto,
+				messageSent as lastMessageSent,
+				messageBody as lastMessageBody,
+				messageRead as lastMessageRead
+			from message join employee on messageSender = employeeId and messageReceiver = employeeId
+			where employeeId = #{employeeId}
+			order by messageSent desc limit 1)
+		order by lastMessageSent desc
+	</select>
+ 	<resultMap id="partnersMap" type="com.tps.web.staroffice.dto.PartnerDto">
+ 		<result column="partnerId" property="partnerId" />
+		<result column="myId" property="myId" />
+ 		<association
+ 			property="unreadCount"
+			column="messageSender=partnerId messageReceiver=myId"
+ 			select="getUnreadCount" />
+	</resultMap>
+	<select id="getUnreadCount" resultType="int">
+		select count(*) from message
+		where
+			messageSender = #{messageSender}
+			and
+		    messageReceiver = #{messageReceiver}
+		    and
+		    messageRead = false
+	</select>
+
+	<delete id="deleteFiles" parameterType="com.tps.web.staroffice.entity.FilesEntity">
+		delete from files
+		where
+			filesDocumentDepartmentCode = #{filesDocumentDepartmentCode}
+			and
+			filesDocumentNumber = #{filesDocumentNumber}
+	</delete>
+	<update id="updateDocument" parameterType="com.tps.web.staroffice.entity.DocumentEntity">
+		update document set
+			documentTitle = #{documentTitle},
+			documentBody = #{documentBody},
+			documentUpdated = now()
+		where
+				documentDepartmentCode = #{documentDepartmentCode}
+			and
+				documentNumber = #{documentNumber}
+			and
+				documentEmployeeId = #{documentEmployeeId}
+			and
+				documentCreated = #{documentCreated}
+	</update>
+	<insert id="insertFiles" parameterType="com.tps.web.staroffice.entity.FilesEntity">
+		insert into files
+			select
+				#{filesDocumentDepartmentCode},
+				#{filesDocumentNumber},
+				coalesce(max(filesNumber), 0) + 1,
+				#{filesName},
+				#{filesAbsolutePath},
+				#{filesRelativePath}
+			from files
+			where
+				filesDocumentDepartmentCode = #{filesDocumentDepartmentCode}
+				and
+				filesDocumentNumber = #{filesDocumentNumber}
+	</insert>
+	<select id="getInsertedDocumentNumber" parameterType="com.tps.web.staroffice.entity.DocumentEntity" resultType="int">
+		select
+			max(documentNumber)
+		from
+			document
+		where
+			documentDepartmentCode = #{documentDepartmentCode}
+		    and
+		    documentEmployeeId = #{documentEmployeeId}
+	</select>
+	<insert id="insertDocument" parameterType="com.tps.web.staroffice.entity.DocumentEntity">
+		insert into document
+			select
+				#{documentDepartmentCode},
+				coalesce(max(documentNumber), 0) + 1,
+				#{documentEmployeeId},
+				#{documentTitle},
+				#{documentBody},
+				now(),
+				null,
+				0,
+				0
+			from document
+			where documentDepartmentCode = #{documentDepartmentCode}
+	</insert>
+	<insert id="insertComments" parameterType="com.tps.web.staroffice.entity.CommentsEntity">
+		insert into comments
+		values (
+			#{commentsDocumentDepartmentCode},
+			#{commentsDocumentNumber},
+			#{commentsEmployeeId},
+			#{commentsBody},
+			default,
+			null,
+			0
+		)
+	</insert>
+	<delete id="deleteComments" parameterType="com.tps.web.staroffice.entity.CommentsEntity">
+		delete from comments
+		where
+				commentsDocumentDepartmentCode = #{commentsDocumentDepartmentCode}
+		    and
+		    	commentsDocumentNumber = #{commentsDocumentNumber}
+		    and
+		    	commentsEmployeeId = #{commentsEmployeeId}
+		    and
+		    	commentsCreated = #{commentsCreated}
+	</delete>
+	<update id="updateComments" parameterType="com.tps.web.staroffice.entity.CommentsEntity">
+		update comments set
+			commentsBody = #{commentsBody},
+		    commentsUpdated = now()
+		where
+				commentsDocumentDepartmentCode = #{commentsDocumentDepartmentCode}
+		    and
+		    	commentsDocumentNumber = #{commentsDocumentNumber}
+		    and
+		    	commentsEmployeeId = #{commentsEmployeeId}
+		    and
+		    	commentsCreated = #{commentsCreated}
+	</update>
+	<update id="deleteDocument" parameterType="com.tps.web.staroffice.entity.DocumentEntity">
+		update document set
+		documentDeleted = true
+		where
+				documentDepartmentCode = #{documentDepartmentCode}
+			and
+				documentNumber = #{documentNumber}
+	</update>
+	<insert id="deleteSavedDocument" parameterType="com.tps.web.staroffice.entity.SavedDocumentEntity">
+		delete from savedDocument
+		where
+				savedDocumentEmployeeId = #{savedDocumentEmployeeId}
+			and
+				savedDocumentDepartmentCode =  #{savedDocumentDepartmentCode}
+			and
+				savedDocumentNumber = #{savedDocumentNumber}
+	</insert>
+	<insert id="insertSavedDocument" parameterType="com.tps.web.staroffice.entity.SavedDocumentEntity">
+		insert into savedDocument
+		values (#{savedDocumentEmployeeId}, #{savedDocumentDepartmentCode}, #{savedDocumentNumber})
+	</insert>
+	<update id="updateDocumentViewCount" parameterType="com.tps.web.staroffice.entity.DocumentEntity">
+		update
+			document
+		set
+			documentViewCount = documentViewCount + 1
+		where
+				documentDepartmentCode = #{documentDepartmentCode}
+			and
+				documentNumber = #{documentNumber}
+	</update>
+	<select id="getDocument" parameterType="com.tps.web.staroffice.dto.DocumentDto" resultMap="documentMap">
+		select
+			documentDepartmentCode,
+			departmentName,
+			documentNumber,
+			documentEmployeeId,
+			savedDocumentEmployeeId,
+		    employeeLastname,
+		    employeeFirstname,
+			documentTitle,
+			documentBody,
+			documentCreated,
+			documentUpdated,
+			documentViewCount
+		from
+				document
+			join
+				employee
+					on documentEmployeeId = employeeId
+			join
+				department
+					on documentDepartmentCode = departmentCode
+			left join
+				savedDocument
+					on
+						documentDepartmentCode = savedDocumentDepartmentCode
+					and
+		           		documentNumber = savedDocumentNumber
+					and
+						savedDocumentEmployeeId = #{savedDocumentEmployeeId}
+		where
+			documentDeleted = 0
+			and
+			documentDepartmentCode = #{documentDepartmentCode} and documentNumber = #{documentNumber}
+	</select>
+ 	<resultMap id="documentMap" type="com.tps.web.staroffice.dto.DocumentDto">
+		<result column="documentDepartmentCode" property="documentDepartmentCode" />
+		<result column="documentNumber" property="documentNumber" />
+		<collection
+			property="comments"
+			column="commentsDocumentDepartmentCode=documentDepartmentCode commentsDocumentNumber=documentNumber"
+			select="getComments">
+		</collection>
+		<collection
+			property="files"
+			column="filesDocumentDepartmentCode=documentDepartmentCode filesDocumentNumber=documentNumber"
+			select="getFiles">
+		</collection>
+	</resultMap>
+	<select id="getComments" resultType="com.tps.web.staroffice.dto.CommentsDto">
+		select
+			commentsDocumentDepartmentCode,
+			commentsDocumentNumber,
+			commentsEmployeeId,
+		    employeeLastname,
+		    employeeFirstname,
+			commentsBody,
+			commentsCreated,
+			commentsUpdated
+		from
+				comments
+		    join
+		    	employee
+					on commentsEmployeeId = employeeId
+		where
+				commentsDeleted = 0
+		    and
+				commentsDocumentDepartmentCode = #{commentsDocumentDepartmentCode}
+		    and
+		    	commentsDocumentNumber = #{commentsDocumentNumber}
+	</select>
+	<select id="getFiles" resultType="com.tps.web.staroffice.dto.FilesDto">
+		select
+			filesDocumentDepartmentCode,
+			filesDocumentNumber,
+			filesNumber,
+			filesName,
+			filesAbsolutePath,
+			filesRelativePath
+		from
+			files
+		where
+			filesDocumentDepartmentCode = #{filesDocumentDepartmentCode}
+		    and
+		    filesDocumentNumber = #{filesDocumentNumber}
+	</select>
+
+
+	<select id="getDocumentsCount" resultType="int">
+		select
+			count(*)
+		from
+			document
+		where
+			documentDeleted = 0
+			and
+			documentDepartmentCode = #{documentDepartmentCode}
+		    and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+	</select>
+	<select id="getDocumentsCountFromAllDepartments" resultType="int">
+		select
+			count(*)
+		from
+			document
+		where
+			documentDeleted = 0
+		    and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+	</select>
+	<select id="getSavedDocumentsCount" resultType="int">
+		select
+			count(*)
+		from
+			document
+			join savedDocument
+				on
+						documentDepartmentCode = savedDocumentDepartmentCode
+					and
+		           		documentNumber = savedDocumentNumber
+		where
+			documentDeleted = 0
+			and
+			documentDepartmentCode = #{documentDepartmentCode}
+		    and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+	</select>
+	<select id="getSavedDocumentsCountFromAllDepartments" resultType="int">
+		select
+			count(*)
+		from
+			document
+			join savedDocument
+				on
+						documentDepartmentCode = savedDocumentDepartmentCode
+					and
+		           		documentNumber = savedDocumentNumber
+		where
+			documentDeleted = 0
+		    and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+	</select>
+
+	<select id="getNewestDocuments" parameterType="com.tps.web.staroffice.dto.DocumentDto" resultType="com.tps.web.staroffice.dto.DocumentDto">
+		select
+			documentDepartmentCode,
+		    departmentName,
+			documentNumber,
+			documentEmployeeId,
+		    employeeLastname,
+		    employeeFirstname,
+			documentTitle,
+			documentBody,
+			documentCreated,
+			documentUpdated,
+			documentViewCount,
+    		(
+    			select
+    				count(*)
+    			from
+    				comments
+    			where
+    					commentsDocumentDepartmentCode = documentDepartmentCode
+    				and
+    					commentsDocumentNumber = documentNumber
+    		) as commentsCount
+		from
+			document
+			join department
+				on
+						documentDepartmentCode = departmentCode
+			join employee
+				on
+						documentEmployeeId = employeeId
+		where
+			documentDeleted = 0
+			and
+			documentDepartmentCode = #{documentDepartmentCode}
+		    and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+		order by
+			documentCreated desc, documentNumber desc
+		limit 10 offset #{offset}
+	</select>
+	<select id="getNewestDocumentsFromAllDepartments" parameterType="com.tps.web.staroffice.dto.DocumentDto" resultType="com.tps.web.staroffice.dto.DocumentDto">
+		select
+			documentDepartmentCode,
+		    departmentName,
+			documentNumber,
+			documentEmployeeId,
+		    employeeLastname,
+		    employeeFirstname,
+			documentTitle,
+			documentBody,
+			documentCreated,
+			documentUpdated,
+			documentViewCount,
+    		(
+    			select
+    				count(*)
+    			from
+    				comments
+    			where
+    					commentsDocumentDepartmentCode = documentDepartmentCode
+    				and
+    					commentsDocumentNumber = documentNumber
+    		) as commentsCount
+		from
+			document
+			join department
+				on
+						documentDepartmentCode = departmentCode
+			join employee
+				on
+						documentEmployeeId = employeeId
+		where
+			documentDeleted = 0
+		    and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+		order by
+			documentCreated desc, documentNumber desc
+		limit 10 offset #{offset}
+	</select>
+	<select id="getMostViewedDocuments" parameterType="com.tps.web.staroffice.dto.DocumentDto" resultType="com.tps.web.staroffice.dto.DocumentDto">
+		select
+			documentDepartmentCode,
+		    departmentName,
+			documentNumber,
+			documentEmployeeId,
+		    employeeLastname,
+		    employeeFirstname,
+			documentTitle,
+			documentBody,
+			documentCreated,
+			documentUpdated,
+			documentViewCount,
+    		(
+    			select
+    				count(*)
+    			from
+    				comments
+    			where
+    					commentsDocumentDepartmentCode = documentDepartmentCode
+    				and
+    					commentsDocumentNumber = documentNumber
+    		) as commentsCount
+		from
+			document
+			join department
+				on
+						documentDepartmentCode = departmentCode
+			join employee
+				on
+						documentEmployeeId = employeeId
+		where
+			documentDeleted = 0
+		    and
+		    documentDepartmentCode = #{documentDepartmentCode}
+		    and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+		order by
+			documentViewCount desc
+		limit 10 offset #{offset}
+	</select>
+	<select id="getMostViewedDocumentsFromAllDepartments" parameterType="com.tps.web.staroffice.dto.DocumentDto" resultType="com.tps.web.staroffice.dto.DocumentDto">
+		select
+			documentDepartmentCode,
+		    departmentName,
+			documentNumber,
+			documentEmployeeId,
+		    employeeLastname,
+		    employeeFirstname,
+			documentTitle,
+			documentBody,
+			documentCreated,
+			documentUpdated,
+			documentViewCount,
+    		(
+    			select
+    				count(*)
+    			from
+    				comments
+    			where
+    					commentsDocumentDepartmentCode = documentDepartmentCode
+    				and
+    					commentsDocumentNumber = documentNumber
+    		) as commentsCount
+		from
+			document
+			join department
+				on
+						documentDepartmentCode = departmentCode
+			join employee
+				on
+						documentEmployeeId = employeeId
+		where
+			documentDeleted = 0
+			and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+		order by
+			documentViewCount desc
+		limit 10 offset #{offset}
+	</select>
+	<select id="getNewestSavedDocuments" parameterType="com.tps.web.staroffice.dto.DocumentDto" resultType="com.tps.web.staroffice.dto.DocumentDto">
+		select
+			documentDepartmentCode,
+		    departmentName,
+			documentNumber,
+			documentEmployeeId,
+		    employeeLastname,
+		    employeeFirstname,
+			documentTitle,
+			documentBody,
+			documentCreated,
+			documentUpdated,
+			documentViewCount,
+    		(
+    			select
+    				count(*)
+    			from
+    				comments
+    			where
+    					commentsDocumentDepartmentCode = documentDepartmentCode
+    				and
+    					commentsDocumentNumber = documentNumber
+    		) as commentsCount
+		from
+			document
+			join department
+				on
+						documentDepartmentCode = departmentCode
+			join employee
+				on
+						documentEmployeeId = employeeId
+			join savedDocument
+				on
+						documentDepartmentCode = savedDocumentDepartmentCode
+					and
+		           		documentNumber = savedDocumentNumber
+		where
+			documentDeleted = 0
+		    and
+		    documentDepartmentCode = #{documentDepartmentCode}
+		    and
+		    savedDocumentEmployeeId = #{savedDocumentEmployeeId}
+		    and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+		order by
+			documentNumber desc, documentCreated desc
+		limit 10 offset #{offset}
+	</select>
+	<select id="getNewestSavedDocumentsFromAllDepartments" parameterType="com.tps.web.staroffice.dto.DocumentDto" resultType="com.tps.web.staroffice.dto.DocumentDto">
+		select
+			documentDepartmentCode,
+		    departmentName,
+			documentNumber,
+			documentEmployeeId,
+		    employeeLastname,
+		    employeeFirstname,
+			documentTitle,
+			documentBody,
+			documentCreated,
+			documentUpdated,
+			documentViewCount,
+    		(
+    			select
+    				count(*)
+    			from
+    				comments
+    			where
+    					commentsDocumentDepartmentCode = documentDepartmentCode
+    				and
+    					commentsDocumentNumber = documentNumber
+    		) as commentsCount
+		from
+			document
+			join department
+				on
+						documentDepartmentCode = departmentCode
+			join employee
+				on
+						documentEmployeeId = employeeId
+			join savedDocument
+				on
+						documentDepartmentCode = savedDocumentDepartmentCode
+					and
+		           		documentNumber = savedDocumentNumber
+		where
+			documentDeleted = 0
+		    and
+		    savedDocumentEmployeeId = #{savedDocumentEmployeeId}
+		    and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+		order by
+			documentNumber desc, documentCreated desc
+		limit 10 offset #{offset}
+	</select>
+	<select id="getMostViewedSavedDocuments" parameterType="com.tps.web.staroffice.dto.DocumentDto" resultType="com.tps.web.staroffice.dto.DocumentDto">
+		select
+			documentDepartmentCode,
+		    departmentName,
+			documentNumber,
+			documentEmployeeId,
+		    employeeLastname,
+		    employeeFirstname,
+			documentTitle,
+			documentBody,
+			documentCreated,
+			documentUpdated,
+			documentViewCount,
+    		(
+    			select
+    				count(*)
+    			from
+    				comments
+    			where
+    					commentsDocumentDepartmentCode = documentDepartmentCode
+    				and
+    					commentsDocumentNumber = documentNumber
+    		) as commentsCount
+		from
+			document
+			join department
+				on
+						documentDepartmentCode = departmentCode
+			join employee
+				on
+						documentEmployeeId = employeeId
+			join savedDocument
+				on
+						documentDepartmentCode = savedDocumentDepartmentCode
+					and
+		           		documentNumber = savedDocumentNumber
+		where
+			documentDeleted = 0
+		    and
+		    documentDepartmentCode = #{documentDepartmentCode}
+		    and
+		    savedDocumentEmployeeId = #{savedDocumentEmployeeId}
+		    and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+		order by
+			documentViewCount desc
+		limit 10 offset #{offset}
+	</select>
+	<select id="getMostViewedSavedDocumentsFromAllDepartments" parameterType="com.tps.web.staroffice.dto.DocumentDto" resultType="com.tps.web.staroffice.dto.DocumentDto">
+		select
+			documentDepartmentCode,
+		    departmentName,
+			documentNumber,
+			documentEmployeeId,
+		    employeeLastname,
+		    employeeFirstname,
+			documentTitle,
+			documentBody,
+			documentCreated,
+			documentUpdated,
+			documentViewCount,
+    		(
+    			select
+    				count(*)
+    			from
+    				comments
+    			where
+    					commentsDocumentDepartmentCode = documentDepartmentCode
+    				and
+    					commentsDocumentNumber = documentNumber
+    		) as commentsCount
+		from
+			document
+			join department
+				on
+						documentDepartmentCode = departmentCode
+			join employee
+				on
+						documentEmployeeId = employeeId
+			join savedDocument
+				on
+						documentDepartmentCode = savedDocumentDepartmentCode
+					and
+		           		documentNumber = savedDocumentNumber
+		where
+			documentDeleted = 0
+		    and
+		    savedDocumentEmployeeId = #{savedDocumentEmployeeId}
+		    and
+		    (
+		    	upper(documentTitle) like concat('%', upper(#{query}), '%')
+		    	or
+		    	upper(documentBody) like concat('%', upper(#{query}), '%')
+		    )
+		order by
+			documentViewCount desc
+		limit 10 offset #{offset}
+	</select>
+	<delete id="deleteContacts"  parameterType="com.tps.web.staroffice.entity.ContactsEntity">
+		delete from contacts where contactsFollower = #{contactsFollower} and contactsFollowee = #{contactsFollowee}
+	</delete>
+	<insert id="insertContacts" parameterType="com.tps.web.staroffice.entity.ContactsEntity">
+		insert into contacts values(#{contactsFollower}, #{contactsFollowee})
+	</insert>
+	<select id="getMyContactsByQueryAndEmployeeDepartmentCode" parameterType="com.tps.web.staroffice.dto.EmployeeDto" resultType="com.tps.web.staroffice.dto.EmployeeDto">
+		select
+			employeeId,
+		    employeeEmail,
+		    employeeLastname,
+		    employeeFirstname,
+		    employeeGradeCode,
+		    gradeName,
+		    employeeDepartmentCode,
+		    departmentName,
+		    employeePhone,
+		    employeePhoto,
+		    (select count(*) from contacts where contactsFollower = #{employeeId} and contactsFollowee = employeeId) as myContact
+		from
+			employee
+		    join
+		    grade
+				on employeeGradeCode = gradeCode
+			join
+		    department
+				on employeeDepartmentCode = departmentCode
+			join
+			contacts
+				on employeeId = contactsFollowee
+		where
+				employeeDeleted = 0
+		    and
+			    employeeDepartmentCode = #{employeeDepartmentCode}
+		    and
+				(
+					upper(employeeLastname) like concat('%', upper(#{query}), '%')
+					or
+					upper(employeeFirstname) like concat('%', upper(#{query}), '%')
+			        or
+			        employeeEmail like concat('%', #{query}, '%')
+			        or
+			        employeePhone like concat('%', #{query}, '%')
+			        or
+			        employeeId like concat('%', #{query}, '%')
+		        )
+		    and
+		    	contactsFollower = #{employeeId}
+	</select>
+	<select id="getMyContactsByQuery" parameterType="com.tps.web.staroffice.dto.EmployeeDto" resultType="com.tps.web.staroffice.dto.EmployeeDto">
+		select
+			employeeId,
+		    employeeEmail,
+		    employeeLastname,
+		    employeeFirstname,
+		    employeeGradeCode,
+		    gradeName,
+		    employeeDepartmentCode,
+		    departmentName,
+		    employeePhone,
+		    employeePhoto,
+		    (select count(*) from contacts where contactsFollower = #{employeeId} and contactsFollowee = employeeId) as myContact
+		from
+			employee
+		    join
+		    grade
+				on employeeGradeCode = gradeCode
+			join
+		    department
+				on employeeDepartmentCode = departmentCode
+			join
+			contacts
+				on employeeId = contactsFollowee
+		where
+				employeeDeleted = 0
+		    and
+				(
+					upper(employeeLastname) like concat('%', upper(#{query}), '%')
+					or
+					upper(employeeFirstname) like concat('%', upper(#{query}), '%')
+			        or
+			        employeeEmail like concat('%', #{query}, '%')
+			        or
+			        employeePhone like concat('%', #{query}, '%')
+			        or
+			        employeeId like concat('%', #{query}, '%')
+		        )
+		    and
+		    	contactsFollower = #{employeeId}
+	</select>
+	<select id="getContactsByQueryAndEmployeeDepartmentCode" parameterType="com.tps.web.staroffice.dto.EmployeeDto" resultType="com.tps.web.staroffice.dto.EmployeeDto">
+		select
+			employeeId,
+		    employeeEmail,
+		    employeeLastname,
+		    employeeFirstname,
+		    employeeGradeCode,
+		    gradeName,
+		    employeeDepartmentCode,
+		    departmentName,
+		    employeePhone,
+		    employeePhoto,
+		    (select count(*) from contacts where contactsFollower = #{employeeId} and contactsFollowee = employeeId) as myContact
+		from
+			employee
+		    join
+		    grade
+				on employeeGradeCode = gradeCode
+			join
+		    department
+				on employeeDepartmentCode = departmentCode
+		where
+				employeeDeleted = 0
+			and
+				employeeDepartmentCode = #{employeeDepartmentCode}
+		    and
+				(
+					upper(employeeLastname) like concat('%', upper(#{query}), '%')
+					or
+					upper(employeeFirstname) like concat('%', upper(#{query}), '%')
+			        or
+			        employeeEmail like concat('%', #{query}, '%')
+			        or
+			        employeePhone like concat('%', #{query}, '%')
+			        or
+			        employeeId like concat('%', #{query}, '%')
+		        )
+	</select>
+	<select id="getContactsByQuery" parameterType="com.tps.web.staroffice.dto.EmployeeDto" resultType="com.tps.web.staroffice.dto.EmployeeDto">
+		select
+			employeeId,
+		    employeeEmail,
+		    employeeLastname,
+		    employeeFirstname,
+		    employeeGradeCode,
+		    gradeName,
+		    employeeDepartmentCode,
+		    departmentName,
+		    employeePhone,
+		    employeePhoto,
+		    (select count(*) from contacts where contactsFollower = #{employeeId} and contactsFollowee = employeeId) as myContact
+		from
+			employee
+		    join
+		    grade
+				on employeeGradeCode = gradeCode
+			join
+		    department
+				on employeeDepartmentCode = departmentCode
+		where
+				employeeDeleted = 0
+		    and
+				(
+					upper(employeeLastname) like concat('%', upper(#{query}), '%')
+					or
+					upper(employeeFirstname) like concat('%', upper(#{query}), '%')
+			        or
+			        employeeEmail like concat('%', #{query}, '%')
+			        or
+			        employeePhone like concat('%', #{query}, '%')
+			        or
+			        employeeId like concat('%', #{query}, '%')
+		        )
+	</select>
+	<update id="deleteEmployee" parameterType="string">
+		update employee set
+			employeeDeleted = true
+		where
+			employeeId = #{employeeId}
+	</update>
+	<update id="updateEmployeePassword" parameterType="com.tps.web.staroffice.entity.EmployeeEntity">
+		update employee set
+			employeePassword = #{employeePassword}
+		where
+			employeeId = #{employeeId}
+	</update>
+	<select id="getEmployee" parameterType="com.tps.web.staroffice.entity.EmployeeEntity" resultType="com.tps.web.staroffice.dto.EmployeeDto">
+		select
+			employeeId,
+			employeeEmail,
+			employeeLastname,
+			employeeFirstname,
+			employeeGradeCode,
+		    gradeName,
+			employeeDepartmentCode,
+		    departmentName,
+			employeePhone,
+			employeePhoto
+		from
+			employee
+		    join
+		    grade
+				on employeeGradeCode = gradeCode
+			join
+		    department
+				on employeeDepartmentCode = departmentCode
+		where
+			employeeDeleted = 0
+			and
+			(
+				employeeId = #{employeeId}
+				or
+				employeeEmail = #{employeeEmail}
+			)
+		</select>
+	<update id="updateEmployee" parameterType="com.tps.web.staroffice.entity.EmployeeEntity">
+		update employee set
+			employeeEmail = #{employeeEmail},
+		    employeeLastname = #{employeeLastname},
+		    employeeFirstname = #{employeeFirstname},
+		    employeePhone = #{employeePhone}
+		where
+			employeeId = #{employeeId}
+	</update>
+	<select id="getEmployeeByIdAndPassword" parameterType="com.tps.web.staroffice.entity.EmployeeEntity" resultType="com.tps.web.staroffice.dto.EmployeeDto">
+		select
+			employeeId,
+			employeeEmail,
+			employeeLastname,
+			employeeFirstname,
+			employeeGradeCode,
+		    gradeName,
+			employeeDepartmentCode,
+		    departmentName,
+			employeePhone,
+			employeePhoto
+		from
+			employee
+		    join
+		    grade
+				on employeeGradeCode = gradeCode
+			join
+		    department
+				on employeeDepartmentCode = departmentCode
+		where
+			employeeDeleted = 0
+			and
+			(	employeeId = #{employeeId}
+				and
+				employeePassword = #{employeePassword}
+				)
+			or
+			(
+				employeeEmail = #{employeeEmail}
+				and
+				employeePassword = #{employeePassword}
+				)
+		</select>
+	<select id="checkEmployeeId" resultType="boolean">
+		select count(*) from employee where employeeId = #{employeeId}
+	</select>
+	<select id="checkEmployeeEmail" resultType="boolean">
+		select count(*) from employee where employeeEmail = #{employeeEmail}
+	</select>
+	<insert id="insertEmployee" parameterType="com.tps.web.staroffice.entity.EmployeeEntity">
+		insert into employee (
+			employeeId,
+			employeeEmail,
+			employeePassword,
+			employeeLastname,
+			employeeFirstname,
+			employeePhoto,
+			employeeGradeCode,
+			employeeDepartmentCode,
+			employeePhone
+		)
+		values (
+			#{employeeId},
+			#{employeeEmail},
+			#{employeePassword},
+			#{employeeLastname},
+			#{employeeFirstname},
+			#{employeePhoto},
+			#{employeeGradeCode},
+			#{employeeDepartmentCode},
+			#{employeePhone}
+		)
+	</insert>
+	<select id="testSelect" resultType="string">
+		select now()
+	</select>
+</mapper>

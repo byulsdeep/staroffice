@@ -1,0 +1,85 @@
+# Compiled class files
+*.class
+
+# Log files
+logs/
+*.log
+*.out
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Maven specific
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+# Dependencies
+.m2/
+
+# Build artifacts
+*.war
+*.ear
+*.jar
+hs_err_pid*
+
+# Eclipse-specific files
+.project
+# .classpath
+# .settings/
+.springBeans
+.apt_generated/
+.factorypath
+.externalToolBuilders/
+
+# Eclipse Plugin Specific
+.buildpath
+.recommenders/
+.metadata/
+bin/
+
+# MyBatis-specific
+sql-maps-config.xml~
+*.db
+
+# Spring and Config Files
+*.env
+# *.properties
+*.yml
+*.yaml
+!src/main/resources/application.properties
+!src/main/resources/application.yml
+
+# Database files
+*.h2.db
+*.mv.db
+*.sqlite
+*.sql
+dump.rdb
+
+# Tomcat / Jetty / Web-related
+*.war
+*.ear
+*.jsp~
+
+# Generated reports
+surefire-reports/
+test-output/
+coverage/
+
+# Security files
+*.keystore
+*.p12
+*.pem
+*.crt
+*.cert
+*.key
+
+# Misc
+node_modules/
+dist/
+bin/
+out/

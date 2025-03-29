@@ -1,0 +1,154 @@
+:root {
+	--star: #A994E8;
+	--star-hover: #BAA3FF;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  /* white-space: nowrap; */
+}
+.home_button {
+	font-weight: bold;
+	cursor: pointer;
+}
+.fa-star {
+    animation-name: rotate;
+    animation-duration: 9s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+	color: var(--star);
+}
+h1 {
+	margin-top: 5%;
+	font-size: 2rem;
+	cursor: pointer;
+}
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(-360deg);
+    }
+}
+header {
+	position: fixed;
+	z-index: 1;
+	width: 100%;
+	top: 0;
+}
+.header_top, .header_bottom {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.header_top > *, .header_bottom > * {
+	border: 1px solid;
+	padding: 5px;
+	flex-grow: 1;
+	text-align: center;
+	background-color: white;
+}
+.header_top > div:nth-child(3),
+.header_bottom > *:not(.datetime) {
+	background-color: var(--star);
+	cursor: pointer;
+}
+.header_top > div:nth-child(3):hover,
+.header_bottom > *:not(.datetime):hover {
+	background-color: var(--star-hover);
+	color: white;
+	border: 1px solid white;
+}
+.features_wrap {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: 2.5%;
+	margin-bottom: 2.5%;
+}
+.features_wrap > * {
+	flex-grow: 1;
+	border: 1px solid;
+	background-color: var(--star);
+	padding: 5px;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+}
+.features_wrap > *:hover {
+	color: white;
+	background-color: var(--star-hover);
+	border: 1px solid white;
+}
+section {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	top: 27vh;
+}
+form {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+input {
+	display: block;
+	margin: 2px;
+	width: 60%;
+}
+.buttons_wrap {
+	margin-top: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.buttons_wrap > * {
+	background-color: var(--star);
+	flex-basis: 50%;
+	padding: 5px;
+	margin: 5px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+.buttons_wrap > *:hover {
+	background-color: var(--star-hover);
+	color: white;
+	border: 1px solid white;
+}
+.quick_access_wrap {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.quick_access_wrap > * {
+	padding: 5px;
+	min-width: 33%;
+	max-width: 50%;
+}
+.quick_access_wrap > * > div {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding: 5px;
+	border: 1px solid;
+	cursor: pointer;
+}
+.quick_access_wrap > * > div:nth-child(1) {
+	background-color: var(--star);
+	text-align: center;
+}
+.quick_access_wrap > * > div:nth-child(1):hover {
+	background-color: var(--star-hover);
+	color: white;
+	border: 1px solid whtie;
+}
+.quick_access_wrap > * > div:not(div:nth-child(1)):hover {
+	background-color: black;
+	color: white;
+}

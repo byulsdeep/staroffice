@@ -1,0 +1,120 @@
+drop database if exists staroffice;
+grant all privileges on staroffice.* to user_sp@localhost identified by '123456';
+flush privileges;
+create database staroffice character set utf8;
+use staroffice;
+create table grade(
+    gradeCode int auto_increment primary key,
+    gradeName varchar(10) unique not null
+);
+create table department(
+    departmentCode int auto_increment primary key,
+    departmentName varchar(10) unique not null
+);
+create table employee(
+    employeeId varchar(33) primary key,
+    employeeEmail varchar(100) unique not null,
+    employeePassword char(128) not null,
+    employeeLastname varchar(10) not null,
+    employeeFirstname varchar(10) not null,
+    employeeGradeCode int,
+    employeeDepartmentCode int,
+    employeePhone varchar(20),
+    employeePhoto varchar(255),
+    employeeDeleted boolean default false,
+    foreign key (employeeGradeCode) references grade(gradeCode),
+    foreign key (employeeDepartmentCode) references department(departmentCode)
+);
+create table contacts(
+    contactsFollower varchar(33),
+    contactsFollowee varchar(33),
+    primary key (contactsFollower, contactsFollowee),
+    foreign key (contactsFollower) references employee(employeeId),
+    foreign key (contactsFollowee) references employee(employeeId)
+);
+create table document(
+    documentDepartmentCode int,
+    documentNumber int,
+    documentEmployeeId varchar(33),
+    documentTitle varchar(100),
+    documentBody text,
+    documentCreated datetime default now(),
+    documentUpdated datetime,
+    documentDeleted boolean default false,
+    documentViewCount int default 0,
+    primary key (documentDepartmentCode, documentNumber),
+    foreign key (documentDepartmentCode) references department(departmentCode),
+    foreign key (documentEmployeeId) references employee(employeeId)
+);
+create table comments(
+	commentsDocumentDepartmentCode int,
+    commentsDocumentNumber int,
+    commentsEmployeeId varchar(33),
+    commentsBody text,
+    commentsCreated datetime default now(),
+    commentsUpdated datetime,
+    commentsDeleted boolean default false,
+    primary key (commentsDocumentDepartmentCode, commentsDocumentNumber, commentsEmployeeId, commentsCreated),
+    foreign key (commentsDocumentDepartmentCode, commentsDocumentNumber) references document (documentDepartmentCode, documentNumber),
+    foreign key (commentsEmployeeId) references employee (employeeId)
+);
+create table files(
+    filesDocumentDepartmentCode int,
+    filesDocumentNumber int,
+    filesNumber int,
+    filesName varchar(255) not null,
+    filesAbsolutePath varchar(255) not null,
+    filesRelativePath varchar(255) not null,
+    primary key (filesDocumentDepartmentCode, filesDocumentNumber, filesNumber),
+    foreign key (filesDocumentDepartmentCode, filesDocumentNumber) references document(documentDepartmentCode, documentNumber)
+);
+create table savedDocument(
+    savedDocumentEmployeeId varchar(33),
+    savedDocumentDepartmentCode int,
+    savedDocumentNumber int,
+    primary key (savedDocumentEmployeeId, savedDocumentDepartmentCode, savedDocumentNumber),
+    foreign key (savedDocumentEmployeeId) references employee(employeeId),
+    foreign key (savedDocumentDepartmentCode, savedDocumentNumber) references document(documentDepartmentCode, documentNumber)
+);
+create table message(
+    messageSender varchar(33),
+    messageReceiver varchar(33),
+    messageSent datetime default now(),
+    messageBody text,
+    messageRead boolean default false,
+    primary key (messageSender, messageReceiver, messageSent),
+    foreign key (messageSender) references employee(employeeId),
+    foreign key (messageReceiver) references employee(employeeId)
+);
+create table notificationType (
+    notificationTypeCode int auto_increment primary key,
+    notificationTypeName varchar(10) unique not null
+);
+create table notification (
+    notificationSender varchar(33),
+    notificationReceiver varchar(33),
+    notificationCreated datetime default now(),
+    notificationNotificationTypeCode int,
+    notificationDocumentDepartmentCode int,
+    notificationDocumentNumber int,
+    primary key (notificationSender, notificationReceiver, notificationCreated),
+    foreign key (notificationSender) references employee(employeeId),
+    foreign key (notificationReceiver) references employee(employeeId),
+    foreign key (notificationNotificationTypeCode) references notificationType(notificationTypeCode),
+    foreign key (notificationDocumentDepartmentCode, notificationDocumentNumber) references document(documentDepartmentCode, documentNumber)
+);
+insert into notificationType values (default, '新しい文書');
+insert into notificationType values (default, 'メッセージ');
+insert into grade (gradeName) values ('新入社員');
+insert into grade (gradeName) values ('一般社員');
+insert into grade (gradeName) values ('主任');
+insert into grade (gradeName) values ('係長');
+insert into grade (gradeName) values ('課長');
+insert into grade (gradeName) values ('次長');
+insert into grade (gradeName) values ('部長');
+insert into grade (gradeName) values ('本部長');
+insert into grade (gradeName) values ('社長');
+insert into department (departmentName) values ('システム開発事務部');
+insert into department (departmentName) values ('s・i本部');
+insert into department (departmentName) values ('管理本部');
+insert into department (departmentName) values ('営業戦略推進部');

@@ -1,0 +1,857 @@
+:root {
+	--star: #A994E8;
+	--star-hover: #BAA3FF;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+input, select {
+	padding: 5px;
+}
+button {
+	font-size: 1rem;
+	padding: 5px;
+	border: 1px solid;
+	cursor: pointer;
+	background-color: var(--star);
+}
+button:hover {
+	background-color: var(--star-hover);
+	border: 1px solid white;
+	color: white;
+}
+.home_button {
+	font-weight: bold;
+	cursor: pointer;
+}
+.fa-star {
+    animation-name: rotate;
+    animation-duration: 9s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+	color: var(--star);
+}
+h1 {
+	font-size: 2rem;
+	cursor: pointer;
+}
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(-360deg);
+    }
+}
+header {
+	/* position: fixed; */
+	/* z-index: 1; */
+	width: 100%;
+	top: 0;
+}
+.header_top, .header_bottom {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.header_top > *, .header_bottom > * {
+	border: 1px solid;
+	padding: 5px;
+	flex-grow: 1;
+	text-align: center;
+	background-color: white;
+}
+.header_top > div:nth-child(3),
+.header_bottom > *:not(.datetime) {
+	background-color: var(--star);
+	cursor: pointer;
+}
+.header_top > div:nth-child(3):hover,
+.header_bottom > *:not(.datetime):hover {
+	background-color: var(--star-hover);
+	color: white;
+	border: 1px solid white;
+}
+.features_wrap {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: 2.5%;
+	margin-bottom: 2.5%;
+}
+.features_wrap > * {
+	flex-grow: 1;
+	border: 1px solid;
+	background-color: var(--star);
+	padding: 5px;
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+}
+.features_wrap > *:hover {
+	color: white;
+	background-color: var(--star-hover);
+	border: 1px solid white;
+}
+.future_features_wrap {
+	left: 35%;
+}
+.future_features_wrap > div:nth-child(1),
+.future_features_wrap > div:nth-child(2) > * {
+	border: 1px solid;
+	width: 100%;
+	padding: 5px;
+	white-space: nowrap;
+}
+.future_features_wrap > div:nth-child(2) {
+	display: flex;
+}
+article {
+	margin-top: 5%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+form {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+form > * {
+	margin: 2px;
+	width: 40%;
+}
+form > div {
+	display: flex;
+	justify-content: center;
+}
+form > div > input {
+	width: 50%;
+	display: inline;
+}
+.buttons_wrap {
+	margin-top: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.buttons_wrap > * {
+	font-size: 1rem;
+	text-align: center;
+	background-color: var(--star);
+	flex-basis: 50%;
+	padding: 5px;
+	margin: 5px;
+	cursor: pointer;
+	white-space: nowrap;
+	border: 1px solid;
+}
+.buttons_wrap > *:hover {
+	background-color: var(--star-hover);
+	color: white;
+	border: 1px solid white;
+}
+.quick_access_wrap {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	width: 100%;
+}
+.quick_access_wrap > * {
+	padding: 5px;
+	max-width: 300px;
+}
+.quick_access_wrap > * > div {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding: 5px;
+	border: 1px solid;
+	cursor: pointer;
+}
+.quick_access_wrap > * > div:nth-child(1) {
+	background-color: var(--star);
+	text-align: center;
+}
+.quick_access_wrap > * > div:nth-child(1):hover {
+	background-color: var(--star-hover);
+	color: white;
+	border: 1px solid whtie;
+}
+.quick_access_wrap > * > div:not(div:nth-child(1)):hover {
+	background-color: var(--star-hover);
+	color: white;
+}
+.section_wrap {
+	width: 90%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.section_wrap > * {
+	margin: 5px;
+}
+.account_image_update {
+	display: flex;
+	flex-direction: column;
+	padding: 5px;
+	align-items: center;
+}
+.account_image_update > * {
+	margin: 5px;
+}
+.account_image_update > div {
+	width: 100px;
+	height: 100px;
+	border-radius: 100px;
+	overflow: hidden;
+	border: 1px solid;
+	background-color: black;
+}
+.account_image_update > div > img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.button {
+	background-color: var(--star);
+	padding: 5px;
+	cursor: pointer;
+	border: 1px solid;
+}
+.button:hover {
+	background-color: var(--star-hover);
+	color: white;
+	border: 1px solid white;
+}
+section > table {
+	width: 0;
+}
+section > table > tbody > tr > th,
+section > table > tbody > tr:nth-child(7) > td {
+	padding: 5px;
+	background-color: var(--star);
+	border: 1px solid;
+	font-weight: unset;
+	white-space: nowrap;
+}
+section > table > tbody > tr > td > * {
+	height: 34px;
+	padding: 5px;
+}
+section > table > tbody > tr:nth-child(3) > td > input {
+	width: 48%;
+}
+section > table > tbody > tr > td > * {
+}
+section > table > tbody > tr:nth-child(7) > th {
+	cursor: pointer;
+	/* width: 100px; */
+}
+section > table > tbody > tr:nth-child(7) > th:hover {
+	border: 1px solid white;
+	color: white;
+	background-color: var(--star-hover);
+}
+.password_update_account_delete_wrap {
+	display: flex;
+	flex-direction: column;
+	/* border: 1px solid; */
+	justify-content: space-between;
+}
+.password_update_account_delete_wrap > * {
+	margin: 5px;
+}
+.password_update > input {
+	display: block;
+	height: 34px;
+	padding: 5px;
+}
+.password_update > div {
+	display: flex;
+	justify-content: center;
+}
+.password_update > div > button {
+	background-color: var(--star);
+	padding: 5px;
+	width: 100%;
+	cursor: pointer;
+	border: 1px solid;
+}
+.password_update > div > button:hover {
+	background-color: var(--star-hover);
+	color: white;
+	border: 1px solid white;
+}
+.password_update_account_delete_wrap > button {
+	background-color: red;
+	color: white;
+	cursor: pointer;
+	padding: 5px;
+}
+.contact_search {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.contact_search > * {
+	margin: 5px;
+	font-size: 1rem;
+}
+.contact_search > select,
+.contact_search > button {
+	background-color: var(--star);
+	padding: 5px;
+	border: 1px solid;
+}
+.contact_search > button {
+	cursor: pointer;
+}
+.contact_search > select:hover,
+.contact_search > button:hover {
+	background-color: var(--star-hover);
+	counter-reset: white;
+	border: 1px white solid;
+	color: white;
+}
+.contact_search_result {
+	width: 100%;
+}
+.contact_search_result > div {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	border: 1px solid;
+	padding: 5px;
+	cursor: pointer;
+	overflow: auto;
+}
+.contact_search_result > div:hover {
+	background-color: var(--star-hover);
+	color: white;
+	border: 1px solid white;
+}
+.contact_search_result > div > div {
+	white-space: nowrap;
+	margin: 5px;
+}
+.contact_search_result > div > div:nth-child(1) {
+	flex-basis: 24.5%;
+}
+.contact_search_result > div > div:nth-child(2) {
+	flex-basis: 24.5%;
+}
+.contact_search_result > div > div:nth-child(3) {
+	flex-basis: 24.5%;
+}
+.contact_search_result > div > div:nth-child(4) {
+	flex-basis: 24.5%;
+}
+.contact_search_result > div > div:nth-child(5) {
+	flex-basis: 2%;
+}
+.doc_list {
+	width: 100%;
+}
+.doc_list > div {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	border: 1px solid;
+	padding: 5px;
+	overflow: auto;
+	white-space: nowrap;
+}
+.doc_list > div:not(div:nth-child(1)) {
+	cursor: pointer;
+}
+.doc_list > div:not(div:nth-child(1)):hover {
+	background-color: var(--star-hover);
+	color: white;
+	border: 1px solid white;
+}
+.doc_list > div > div {
+	text-overflow: ellipsis;
+	margin: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.doc_list > div > div:nth-child(1) {
+	flex-basis: 5%;
+}
+.doc_list > div > div:nth-child(2) {
+	flex-basis: 18.75%;
+}
+.doc_list > div > div:nth-child(3) {
+	flex-basis: 18.75%;
+}
+.doc_list > div > div:nth-child(4) {
+	flex-basis: 10%;
+}
+.doc_list > div > div:nth-child(5) {
+	flex-basis: 18.75%;
+}
+.doc_list > div > div:nth-child(6) {
+	flex-basis: 18.75%;
+}
+.doc_list > div > div:nth-child(7) {
+	flex-basis: 10%;
+}
+.modal_wrap {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	display: none;
+	/* display: flex; */
+	justify-content: center;
+	align-items: center;
+}
+.modal {
+	padding: 10px;
+	background-color: white;
+	border: 1px solid;
+}
+.modal_top {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.modal_top > * {
+	margin: 5px;
+}
+.modal_image_wrap {
+	width: 100px;
+	height: 100px;
+	border-radius: 100px;
+	overflow: hidden;
+	border: 1px solid;
+	background-color: black;
+}
+.modal_image_wrap > img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.modal_contact_info > table > tbody > tr > th {
+	white-space: nowrap;
+	margin: 5px;
+}
+.modal_bottom {
+	display: flex;
+	justify-content: center;
+}
+.modal_bottom > button,
+.modal > button {
+	margin: 5px;
+	background-color: var(--star);
+	border: 1px solid;
+	cursor: pointer;
+	padding: 5px;
+}
+.modal > button {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+.modal_bottom > button:hover,
+.modal > button:hover {
+	border: white 1px solid;
+	color: white;
+	background-color: var(--star-hover);
+}
+.doc_info {
+	border: 1px solid;
+	width: 90%;
+}
+.doc_info > div:nth-child(1) {
+	padding: 5px;
+}
+.doc_info_metadata {
+	border: 1px solid;
+	display: flex;
+	justify-content: space-between;
+}
+.doc_info_metadata > div:nth-child(1) > * {
+	border: 1px solid;
+}
+.doc_info_metadata > div > button {
+	background-color: var(--star);
+	cursor: pointer;
+	font-size: 1rem;
+}
+.doc_info_metadata > div > button:hover {
+	background-color: var(--star-hover);
+	border: 1px solid white;
+
+}
+.doc_info_metadata > div {
+	display: flex;
+	flex-wrap: wrap;
+}
+.doc_info_metadata > div > * {
+	padding: 5px;
+}
+.doc_info_attachment {
+	display: flex;
+	justify-content: end;
+	border: 1px solid;
+}
+
+.doc_info_attachment > * {
+	padding: 5px;
+	border: 1px solid;
+}
+.doc_info_attachment > button {
+	cursor: pointer;
+	background-color: var(--star);
+}
+.doc_info_attachment > button:hover {
+	border: 1px solid white;
+	color: white;
+}
+.doc_info_body {
+	padding: 5px;
+	overflow: auto;
+}
+.doc_buttons {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.doc_buttons > button {
+	background-color: var(--star);
+	padding: 5px;
+	margin: 5px;
+	border: 1px solid;
+	cursor: pointer;
+}
+.doc_buttons > button:hover {
+	color: white;
+	border: 1px solid white;
+}
+.comments {
+	width: 90%;
+	border: 1px solid;
+}
+.comments > div {
+	display: flex;
+	justify-content: space-between;
+	padding: 5px;
+	align-items: center;
+	border: 1px solid;
+}
+.comments > div > div:not(div:nth-child(2)) {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.comments > div > div:nth-child(1) {
+	flex-basis: 10%;
+}
+.comments > div > div:nth-child(2) {
+	margin-left: 5%;
+	flex-basis: 55%;
+}
+.comments > div > div:nth-child(3) {
+	flex-basis: 20%;
+}
+.comments > div > div:nth-child(4) {
+	flex-basis: 10%;
+}
+.comments > div > div:nth-child(3) {
+	display: flex;
+}
+.comments > div > div:nth-child(3) > div {
+	margin: 5px;
+}
+.comments > div > div:nth-child(4) > button {
+	margin: 5px;
+	background-color: var(--star);
+	padding: 5px;
+	cursor: pointer;
+	border: 1px solid;
+}
+.comments > div > input {
+	width: 75%;
+	padding: 5px;
+}
+.comments > div > button {
+	background-color: var(--star);
+	border: 1px solid;
+	cursor: pointer;
+	padding: 5px;
+	white-space: nowrap;
+}
+.comments > div > button:hover {
+	color: white;
+	border: 1px solid white;
+}
+.write_doc {
+	width: 90%;
+}
+.write_doc > div:not(.editor) {
+	display: flex;
+	/* width: 100%; */
+	white-space: nowrap;
+	flex-wrap: wrap;
+}
+.title_input {
+	width: 100%;
+}
+.write_doc > div:not(.editor) > div {
+	border: 1px solid;
+	padding: 5px;
+	display: flex;
+/* 	justify-content: center; */
+	align-items: center;
+	/* flex-grow: 1; */
+}
+.write_doc > div:nth-child(1) > div:nth-child(4),
+.write_doc > div:nth-child(2) > div:nth-child(4) {
+	flex-grow: 1;
+}
+.write_doc > div:not(.editor) > div:nth-child(odd) {
+	background-color: var(--star);
+}
+.editor {
+	overflow: auto;
+	margin-top: 5px;
+	border: 1px solid;
+	padding: 5px;
+	border-radius: 5px;
+}
+.write_doc_buttons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+}
+.write_doc_buttons > button {
+	cursor: pointer;
+	margin: 5px;
+	background-color: var(--star);
+	border: 1px solid;
+	padding: 5px;
+	font-size: 1rem;
+}
+.write_doc_buttons > button:hover {
+	color: white;
+	border: 1px solid white;
+}
+.new_chat_button {
+	right: -14%;
+}
+.chat_image_wrap {
+	width: 50px;
+	height: 50px;
+	border-radius: 50px;
+	overflow: hidden;
+	border: 1px solid;
+	background-color: black;
+	margin-right: 5px;
+}
+.chat_image_wrap > img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.chat_history {
+	width: 90%;
+}
+.chat_history > div {
+	align-items: center;
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	border: 1px solid;
+	padding: 5px;
+	cursor: pointer;
+}
+.chat_history > div:hover {
+	background-color: var(--star-hover);
+	border: 1px solid white;
+	color: white;
+}
+.chat_history > div > div {
+	margin: 5px;
+}
+.chat_history > div > div:nth-child(1) {
+	display: flex;
+}
+.chat_history > div > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) {
+	font-weight: bold;
+}
+
+.chat_room {
+	/* display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center; */
+	text-align: center;
+	width: 90%;
+	border: 1px solid;
+    height: 60vh;
+    overflow-y: scroll;
+}
+.chat_room_datetime {
+	background-color: lightgrey;
+	display: inline-block;
+	border-radius: 5px;
+	padding: 5px;
+	font-size: 0.7rem;
+	margin: 5px;
+}
+.sent {
+	display: flex;
+	justify-content: flex-end;
+	margin: 10px;
+}
+.timestamp_wrap {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+}
+.timestamp {
+	font-size: 0.7rem;
+	margin: 5px;
+}
+.sent_message {
+	background-color: var(--star);
+	padding: 5px;
+	border: 1px solid;
+}
+.received {
+	display: flex;
+	justify-content: flex-start;
+	margin: 10px;
+}
+.sender_name {
+	text-align: start;
+	font-weight: bold;
+}
+.received_message {
+	background-color: lightgrey;
+	border: 1px solid;
+	padding: 5px;
+}
+.sender_image_wrap {
+	width: 75px;
+	height: 75px;
+	border-radius: 100px;
+	overflow: hidden;
+	border: 1px solid;
+	background-color: black;
+	margin-right: 5px;
+}
+.sender_image_wrap > img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+
+
+
+.send_message_wrap {
+	width: 50%;
+	/* display: flex; */
+	display: flex;
+	justify-content: center;
+}
+.send_message_wrap > * {
+	margin: 5px;
+	font-size: 1rem;
+}
+.send_message_wrap > input {
+	flex-basis: 70%;
+}
+.send_message_wrap > button {
+	background-color: var(--star);
+	padding: 5px;
+	border: 1px solid;
+	cursor: pointer;
+	flex-basis: 30%;
+}
+
+
+.chat_room_return_button {
+	background-color: var(--star);
+	font-size: 1rem;
+	border: 1px solid;
+	cursor: pointer;
+	padding: 5px;
+}
+.chat_room_return_button:hover {
+	border: 1px solid white;
+	color: white;
+}
+.pagination_wrap {
+	margin: 10px;
+	display: flex;
+	flex-wrap: wrap;
+}
+.pagination_wrap > div {
+	margin: 5px;
+	padding: 5px;
+}
+.pagination_wrap > div:not(.current_page) {
+	border: 1px solid;
+	cursor: pointer;
+	background-color: var(--star);
+}
+.pagination_wrap > div:not(.current_page):hover {
+	background-color: var(--star-hover);
+	color: white;
+	border: 1px solid white;
+}
+.unread_count {
+	color: white;
+	background-color: red;
+	width: 25px;
+	height: 25px;
+	border-radius: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.notification_list {
+	width: 90%;
+}
+.notification_list > div {
+	align-items: center;
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	border: 1px solid;
+	padding: 5px;
+	cursor: pointer;
+}
+.notification_list > div:hover {
+	background-color: var(--star-hover);
+	border: 1px solid white;
+	color: white;
+}
+.notification_list > div > div {
+	margin: 5px;
+}
+.notification_list > div > div:nth-child(1) {
+	width: 100%;
+	display: flex;
+}
+.notification_list > div > div:nth-child(1) > div:nth-child(2) {
+	flex-basis: 80%;
+}
+.notification_list > div > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) {
+	font-weight: bold;
+}

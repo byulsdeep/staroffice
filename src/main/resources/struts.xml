@@ -14,6 +14,7 @@
 
 	<!-- プロパティファイル -->
 	<constant name="struts.custom.i18n.resources" value="message" />
+	<constant name="struts.multipart.maxSize" value="5242880"/> <!-- 5MB -->
 
 	<package name="default" namespace="/" extends="struts-default, json-default">
 
